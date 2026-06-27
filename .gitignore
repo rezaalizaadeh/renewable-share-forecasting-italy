@@ -1,0 +1,10 @@
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+*.html
+*.log
+*.aux
+*.out
+*.toc
+data/raw/*.xlsx
