@@ -60,13 +60,21 @@ generation <- raw_generation %>%
   transmute(
     datetime = parse_terna_datetime(date),
     source = str_trim(primary_source),
+<<<<<<< HEAD
     generation_gw = as.numeric(actual_generation),
+=======
+    generation_mw = as.numeric(actual_generation),
+>>>>>>> 5dd41d80c9be7d8049c68132771006babed795c1
     source_file
   ) %>%
   filter(
     !is.na(datetime),
     !is.na(source),
+<<<<<<< HEAD
     !is.na(generation_gw)
+=======
+    !is.na(generation_mw)
+>>>>>>> 5dd41d80c9be7d8049c68132771006babed795c1
   )
 
 print(range(generation$datetime, na.rm = TRUE))
@@ -81,7 +89,11 @@ generation_energy <- generation %>%
       0.25,
       1
     ),
+<<<<<<< HEAD
     energy_gwh = generation_gw * interval_hours,
+=======
+    energy_mwh = generation_mw * interval_hours,
+>>>>>>> 5dd41d80c9be7d8049c68132771006babed795c1
     date = as.Date(datetime)
   )
 
@@ -97,16 +109,27 @@ print(interval_check)
 daily_generation <- generation_energy %>%
   group_by(date, source) %>%
   summarise(
+<<<<<<< HEAD
     energy_gwh = sum(energy_gwh, na.rm = TRUE),
+=======
+    energy_mwh = sum(energy_mwh, na.rm = TRUE),
+>>>>>>> 5dd41d80c9be7d8049c68132771006babed795c1
     n_obs = n(),
     .groups = "drop"
   )
 
 daily_wide <- daily_generation %>%
+<<<<<<< HEAD
   select(date, source, energy_gwh) %>%
   pivot_wider(
     names_from = source,
     values_from = energy_gwh
+=======
+  select(date, source, energy_mwh) %>%
+  pivot_wider(
+    names_from = source,
+    values_from = energy_mwh
+>>>>>>> 5dd41d80c9be7d8049c68132771006babed795c1
   ) %>%
   clean_names()
 
@@ -130,11 +153,19 @@ if (length(missing_source_cols) > 0) {
 daily_clean <- daily_wide %>%
   arrange(date) %>%
   mutate(
+<<<<<<< HEAD
     renewable_generation_gwh = hydro + geothermal + photovoltaic + wind,
     total_generation_excl_sc_gwh = thermal + hydro + geothermal + photovoltaic + wind,
     total_generation_incl_sc_gwh = total_generation_excl_sc_gwh + self_consumption,
     renewable_share_excl_sc = 100 * renewable_generation_gwh / total_generation_excl_sc_gwh,
     renewable_share_incl_sc = 100 * renewable_generation_gwh / total_generation_incl_sc_gwh,
+=======
+    renewable_generation_mwh = hydro + geothermal + photovoltaic + wind,
+    total_generation_excl_sc_mwh = thermal + hydro + geothermal + photovoltaic + wind,
+    total_generation_incl_sc_mwh = total_generation_excl_sc_mwh + self_consumption,
+    renewable_share_excl_sc = 100 * renewable_generation_mwh / total_generation_excl_sc_mwh,
+    renewable_share_incl_sc = 100 * renewable_generation_mwh / total_generation_incl_sc_mwh,
+>>>>>>> 5dd41d80c9be7d8049c68132771006babed795c1
     trend = row_number(),
     year = year(date),
     month = month(date),
