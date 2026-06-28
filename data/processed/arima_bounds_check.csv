@@ -1,0 +1,8 @@
+model,forecasts_below_0,forecasts_above_100,lower_95_below_0,upper_95_above_100
+ARIMA,0,0,306,157
+Calendar ARIMA errors,0,0,0,0
+Logit Fourier ARIMA,0,0,0,0
+Logit Trend Fourier ARIMA errors,0,0,0,0
+Trend Fourier ARIMA errors,0,0,0,0
+Tuned Fourier ARIMA,0,0,0,0
+Weekly SARIMA,0,0,0,0
