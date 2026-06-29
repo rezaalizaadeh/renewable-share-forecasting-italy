@@ -1,0 +1,573 @@
+---
+title: "Short-Term Forecasting of Italy's Renewable Electricity Share"
+author: "Reza Alizaadeh"
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+fontsize: 11pt
+geometry: margin=1in
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    latex_engine: xelatex
+header-includes:
+  - \usepackage{float}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{caption}
+  - \usepackage{microtype}
+  - \usepackage{xcolor}
+  - \captionsetup[figure]{font=small, labelfont=bf}
+  - \captionsetup[table]{font=small, labelfont=bf}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  fig.pos = "H",
+  out.width = "92%"
+)
+
+library(dplyr)
+library(readr)
+library(knitr)
+library(kableExtra)
+
+processed_dir <- "../data/processed"
+figures_dir <- "../figures"
+
+read_project_csv <- function(file_name) {
+  readr::read_csv(
+    file.path(processed_dir, file_name),
+    show_col_types = FALSE
+  )
+}
+
+format_metrics <- function(data) {
+  data %>%
+    mutate(
+      RMSE = round(RMSE, 2),
+      MAE = round(MAE, 2),
+      MAPE = round(MAPE, 1)
+    )
+}
+
+pdf_table <- function(data, caption = NULL, font_size = 9) {
+  data %>%
+    kable(
+      format = "latex",
+      booktabs = TRUE,
+      caption = caption,
+      linesep = ""
+    ) %>%
+    kable_styling(
+      latex_options = c("hold_position", "striped"),
+      full_width = FALSE,
+      font_size = font_size
+    )
+}
+
+wide_pdf_table <- function(data, caption = NULL, font_size = 8.5) {
+  data %>%
+    kable(
+      format = "latex",
+      booktabs = TRUE,
+      caption = caption,
+      linesep = ""
+    ) %>%
+    kable_styling(
+      latex_options = c("hold_position", "striped", "scale_down"),
+      full_width = FALSE,
+      font_size = font_size
+    )
+}
+
+daily_data <- read_project_csv("renewable_daily_clean.csv") %>%
+  mutate(date = as.Date(date))
+
+baseline_accuracy <- read_project_csv("baseline_model_accuracy.csv")
+arima_accuracy <- read_project_csv("arima_model_accuracy.csv")
+ml_accuracy <- read_project_csv("ml_model_accuracy.csv")
+
+best_models_by_family <- read_project_csv("final_best_models_by_family.csv")
+improvement_summary <- read_project_csv("final_improvement_summary.csv")
+final_diagnostic_summary <- read_project_csv("final_diagnostic_summary.csv")
+top_variable_importance <- read_project_csv("final_top_variable_importance.csv")
+arima_stationarity_summary <- read_project_csv("arima_stationarity_summary.csv")
+ml_generalization_check <- read_project_csv("ml_generalization_check.csv")
+
+target_col <- "renewable_share_excl_sc"
+
+data_summary <- tibble(
+  Item = c(
+    "Start date",
+    "End date",
+    "Daily observations",
+    "Held-out test period",
+    "Mean renewable share",
+    "Minimum renewable share",
+    "Maximum renewable share"
+  ),
+  Value = c(
+    as.character(min(daily_data$date, na.rm = TRUE)),
+    as.character(max(daily_data$date, na.rm = TRUE)),
+    format(nrow(daily_data), big.mark = ","),
+    "2025-01-01 to 2025-12-31",
+    paste0(round(mean(daily_data[[target_col]], na.rm = TRUE), 1), "%"),
+    paste0(round(min(daily_data[[target_col]], na.rm = TRUE), 1), "%"),
+    paste0(round(max(daily_data[[target_col]], na.rm = TRUE), 1), "%")
+  )
+)
+
+selected_weekly_k <- arima_stationarity_summary$selected_weekly_fourier_k[1]
+selected_yearly_k <- arima_stationarity_summary$selected_yearly_fourier_k[1]
+
+elastic_net_generalization <- ml_generalization_check %>%
+  filter(model == "Elastic Net") %>%
+  slice(1)
+```
+
+# Executive summary
+
+This project forecasts Italy's daily renewable electricity share using official generation-mix data from Terna. The raw annual actual-generation files were cleaned, converted to daily energy values, and used to compare three modelling stages:
+
+1. simple benchmark models;
+2. ARIMA-family statistical time-series models;
+3. lag-based regression and machine-learning models.
+
+The final comparison separates two forecasting setups. Baseline and ARIMA-family models are evaluated as full test-year forecasts for 2025. Regression and ML models are evaluated as one-step-ahead operational forecasts, where each day is predicted using lagged information available up to the previous day.
+
+The main result is that **Logit Fourier ARIMA** is the best full-horizon statistical model, while **Elastic Net** is the best operational one-step-ahead model.
+
+```{r executive-summary-table}
+best_models_by_family %>%
+  transmute(
+    Family = recode(
+      model_family,
+      "ARIMA-family" = "ARIMA",
+      "Regression/ML" = "ML",
+      "Baseline" = "Baseline"
+    ),
+    Setup = recode(
+      forecasting_setup,
+      "Full test-year benchmark" = "Full test-year",
+      "Full test-year forecast" = "Full test-year",
+      "One-step-ahead operational forecast" = "One-step-ahead"
+    ),
+    Model = recode(
+      model,
+      "Logit Fourier ARIMA" = "Logit Fourier ARIMA",
+      "Elastic Net" = "Elastic Net",
+      "TSLM" = "TSLM"
+    ),
+    RMSE = round(RMSE, 2),
+    MAE = round(MAE, 2),
+    MAPE = round(MAPE, 1)
+  ) %>%
+  pdf_table(
+    caption = "Best model from each modelling family.",
+    font_size = 9
+  )
+```
+
+# Introduction
+
+The renewable share of the electricity mix changes continuously because of weather-driven generation, hydro availability, demand patterns, and thermal generation dynamics. Forecasting this share gives a compact view of how renewable-heavy the daily electricity mix is expected to be.
+
+The research question is:
+
+> Can Italy's daily renewable electricity share be forecast from historical generation-mix data, and which modelling approach performs best under a time-aware evaluation setup?
+
+The project is built as a staged forecasting pipeline. The baseline stage establishes simple reference models. The ARIMA-family stage tests how far statistical time-series models can go when seasonality and bounded percentage behaviour are handled explicitly. The regression and ML stage tests how much is gained by using recent lagged information in an operational one-step-ahead setting.
+
+# Data and target construction
+
+The raw data come from Terna's public Transparency Report / Download Center, using the **Actual Generation** dataset. The raw Excel files are kept locally under `data/raw/` and are not committed to the repository.
+
+The cleaned dataset covers daily observations from 2021-01-01 to 2025-12-31. The 2025 calendar year is used as the final held-out test period.
+
+```{r data-summary-table}
+data_summary %>%
+  pdf_table(
+    caption = "Cleaned dataset summary.",
+    font_size = 9
+  )
+```
+
+The target variable is the daily renewable electricity share, excluding self-consumption from the denominator:
+
+```text
+renewable_share_excl_sc =
+(Hydro + Geothermal + Photovoltaic + Wind)
+/
+(Thermal + Hydro + Geothermal + Photovoltaic + Wind)
+* 100
+```
+
+The raw generation values were converted into daily energy values before aggregation. Since the final target is a percentage, forecast errors are interpreted in percentage points.
+
+The main cleaned output is:
+
+```text
+data/processed/renewable_daily_clean.csv
+```
+
+# Exploratory data analysis
+
+The exploratory analysis shows that the renewable share is not random around a fixed level. It has visible medium-term movement, seasonal structure, and autocorrelation. This supports the choice of time-series and lag-based forecasting models.
+
+```{r eda-trend, fig.cap="Daily renewable electricity share and medium-term trend.", out.width="86%"}
+knitr::include_graphics(file.path(figures_dir, "01_renewable_share_trend.png"))
+```
+
+The trend plot shows large movements across years and seasons. The target reaches higher levels during some spring and early-summer periods, while lower values appear during winter periods and some late-year intervals. This behaviour makes simple constant-mean forecasting too limited.
+
+```{r eda-seasonal-profile, fig.cap="Monthly seasonal profile of renewable electricity share.", out.width="82%"}
+knitr::include_graphics(file.path(figures_dir, "03_monthly_seasonal_profile.png"))
+```
+
+The seasonal profile confirms that renewable share varies across the year. The average share is higher around spring and early summer, which is consistent with stronger photovoltaic contribution and seasonal hydro patterns.
+
+```{r eda-acf, fig.cap="Autocorrelation of the renewable-share target.", out.width="82%"}
+knitr::include_graphics(file.path(figures_dir, "08_acf_renewable_share.png"))
+```
+
+The autocorrelation function remains positive across many lags and shows weekly structure. This supports the use of Fourier terms in the ARIMA-family stage and lagged predictors in the regression/ML stage.
+
+# Forecasting design
+
+The evaluation is time-aware. The project does not use random train/test splits, because random splitting would mix past and future observations and would not reflect the forecasting problem.
+
+Two forecasting setups are used.
+
+## Full test-year forecasting
+
+The baseline and ARIMA-family models are trained on 2021-2024 and evaluated on the full 2025 test year. This setup is used for the benchmark and statistical time-series models.
+
+## One-step-ahead operational forecasting
+
+The regression and ML models predict each day in 2025 using information available up to the previous day. Lag and rolling features are constructed from past target values only. This setup represents an operational day-ahead forecasting case.
+
+This distinction is important. The Elastic Net result is not presented as a direct full-horizon replacement for ARIMA. It is the best model in the one-step-ahead operational setup.
+
+# Baseline models
+
+The baseline stage gives a reference point for the rest of the project. The tested models are:
+
+- mean forecast;
+- naive forecast;
+- weekly seasonal naive forecast;
+- previous-year naive forecast;
+- time-series linear model with trend, month, and weekday effects.
+
+The strongest baseline is TSLM, with RMSE 9.52 on the 2025 test period.
+
+```{r baseline-table}
+baseline_accuracy %>%
+  arrange(RMSE) %>%
+  transmute(
+    Model = model,
+    RMSE = round(RMSE, 2),
+    MAE = round(MAE, 2),
+    MAPE = round(MAPE, 1),
+    Rank = rank
+  ) %>%
+  pdf_table(
+    caption = "Baseline model accuracy on the 2025 test period.",
+    font_size = 9
+  )
+```
+
+```{r baseline-plot, fig.cap="Baseline model accuracy ranking.", out.width="90%"}
+knitr::include_graphics(file.path(figures_dir, "11_baseline_accuracy_ranking.png"))
+```
+
+The previous-year naive model performs better than simple naive and weekly seasonal naive models, which confirms that annual seasonal structure matters. TSLM performs best among the baselines because it explicitly includes trend, month, and weekday effects.
+
+# ARIMA-family models
+
+The ARIMA-family stage tests statistical time-series models with different levels of seasonal structure. The models include:
+
+- non-seasonal ARIMA;
+- weekly SARIMA;
+- tuned Fourier ARIMA;
+- calendar regression with ARIMA errors;
+- trend/Fourier regression with ARIMA errors;
+- logit-transformed Fourier ARIMA models.
+
+Fourier seasonal terms are used to represent weekly and annual seasonality. The Fourier complexity is selected using rolling-origin validation before evaluating the 2025 test set. The selected complexity was weekly \(K = `r selected_weekly_k`\) and yearly \(K = `r selected_yearly_k`\).
+
+```{r arima-tuning, fig.cap="Rolling-origin validation for Fourier seasonal complexity.", out.width="88%"}
+knitr::include_graphics(file.path(figures_dir, "14_fourier_tuning_validation.png"))
+```
+
+The best ARIMA-family model is Logit Fourier ARIMA, with RMSE 8.93. This improves on the best baseline model.
+
+```{r arima-table}
+arima_accuracy %>%
+  arrange(RMSE) %>%
+  transmute(
+    Model = recode(
+      model,
+      "Logit Trend Fourier ARIMA errors" = "Logit Trend Fourier",
+      "Trend Fourier ARIMA errors" = "Trend Fourier",
+      "Calendar ARIMA errors" = "Calendar ARIMA",
+      .default = model
+    ),
+    RMSE = round(RMSE, 2),
+    MAE = round(MAE, 2),
+    MAPE = round(MAPE, 1),
+    Rank = rank
+  ) %>%
+  pdf_table(
+    caption = "ARIMA-family model accuracy on the 2025 test period.",
+    font_size = 8.8
+  )
+```
+
+```{r arima-plot, fig.cap="ARIMA-family model accuracy ranking.", out.width="90%"}
+knitr::include_graphics(file.path(figures_dir, "16_arima_accuracy_ranking.png"))
+```
+
+The logit transformation is useful because the target is naturally bounded between 0 and 100%. In the ARIMA results, the plain ARIMA model produced unrealistic prediction intervals outside this range, while the logit-based models respected the target bounds.
+
+However, the ARIMA-family residual diagnostics show that strong residual autocorrelation remains. This is a key reason for moving to lag-based regression and ML models.
+
+# Regression and machine-learning models
+
+The regression and ML stage uses a one-step-ahead forecasting setup. Each 2025 day is predicted using lagged and rolling information available up to the previous day.
+
+The predictors include:
+
+- calendar features;
+- day-of-year seasonal terms;
+- lagged renewable-share values;
+- rolling means;
+- rolling standard deviations.
+
+The tested models are:
+
+- lagged linear regression;
+- Ridge regression;
+- Lasso regression;
+- Elastic Net;
+- GAM;
+- Random Forest.
+
+Elastic Net gives the best test RMSE, with performance almost identical to Lasso. This is reasonable because the strongest predictors are recent lag values, and many lag/rolling predictors are correlated. Elastic Net gives shrinkage and variable selection while keeping the model interpretable.
+
+Elastic Net also showed stable validation-test behaviour: validation RMSE was `r round(elastic_net_generalization$validation_RMSE, 2)` and test RMSE was `r round(elastic_net_generalization$test_RMSE, 2)`. This suggests no evidence of overfitting in the final held-out year.
+
+```{r ml-table}
+ml_accuracy %>%
+  arrange(RMSE) %>%
+  transmute(
+    Model = model,
+    RMSE = round(RMSE, 2),
+    MAE = round(MAE, 2),
+    MAPE = round(MAPE, 1),
+    Rank = rank
+  ) %>%
+  pdf_table(
+    caption = "Regression and ML model accuracy on the 2025 test period.",
+    font_size = 9
+  )
+```
+
+```{r ml-plot, fig.cap="Regression and ML model accuracy ranking.", out.width="90%"}
+knitr::include_graphics(file.path(figures_dir, "22_ml_accuracy_ranking.png"))
+```
+
+The Random Forest did not outperform the regularized linear models. This suggests that, for this dataset and one-step-ahead target, most of the usable signal is already captured by recent lag values and short-term rolling structure.
+
+```{r ml-variable-importance, fig.cap="Random Forest variable importance.", out.width="86%"}
+knitr::include_graphics(file.path(figures_dir, "23_ml_variable_importance.png"))
+```
+
+The variable-importance analysis confirms that `lag_1` is by far the most important feature. This supports the interpretation that daily renewable share has strong short-term persistence.
+
+```{r top-variable-table}
+top_variable_importance %>%
+  select(variable, importance) %>%
+  slice_head(n = 6) %>%
+  transmute(
+    Variable = variable,
+    Importance = round(importance, 2)
+  ) %>%
+  pdf_table(
+    caption = "Top Random Forest permutation importance values.",
+    font_size = 9
+  )
+```
+
+# Final model comparison
+
+The final comparison combines the best model from each family.
+
+```{r final-comparison-table}
+best_models_by_family %>%
+  transmute(
+    Family = recode(
+      model_family,
+      "ARIMA-family" = "ARIMA",
+      "Regression/ML" = "ML",
+      "Baseline" = "Baseline"
+    ),
+    Setup = recode(
+      forecasting_setup,
+      "Full test-year benchmark" = "Full test-year",
+      "Full test-year forecast" = "Full test-year",
+      "One-step-ahead operational forecast" = "One-step-ahead"
+    ),
+    Model = recode(
+      model,
+      "Logit Fourier ARIMA" = "Logit Fourier",
+      "Elastic Net" = "Elastic Net",
+      "TSLM" = "TSLM"
+    ),
+    RMSE = round(RMSE, 2),
+    MAE = round(MAE, 2),
+    MAPE = round(MAPE, 1)
+  ) %>%
+  pdf_table(
+    caption = "Final best models by family.",
+    font_size = 9
+  )
+```
+
+```{r final-family-accuracy, fig.cap="Final accuracy comparison by model family.", out.width="90%"}
+knitr::include_graphics(file.path(figures_dir, "26_final_best_family_accuracy.png"))
+```
+
+The final result is:
+
+- best baseline: TSLM, RMSE 9.52;
+- best ARIMA-family model: Logit Fourier ARIMA, RMSE 8.93;
+- best one-step-ahead regression/ML model: Elastic Net, RMSE 5.15.
+
+```{r final-forecast-comparison, fig.cap="Forecast comparison for the best model in each family.", out.width="92%"}
+knitr::include_graphics(file.path(figures_dir, "27_final_best_forecast_comparison.png"))
+```
+
+The forecast comparison shows the modelling progression visually. TSLM captures broad calendar structure, Logit Fourier ARIMA follows seasonal movement more effectively, and Elastic Net tracks short-term variation more closely because it uses recent lagged observations.
+
+```{r final-error-distribution, fig.cap="Absolute error distribution for the best models.", out.width="88%"}
+knitr::include_graphics(file.path(figures_dir, "28_final_absolute_error_distribution.png"))
+```
+
+The absolute error distribution shows that Elastic Net has a lower and tighter error distribution than the best baseline and the best ARIMA-family model.
+
+# Improvement over the baseline
+
+```{r improvement-table}
+improvement_summary %>%
+  transmute(
+    Family = recode(
+      model_family,
+      "ARIMA-family" = "ARIMA",
+      "Regression/ML" = "ML",
+      "Baseline" = "Baseline"
+    ),
+    Model = recode(
+      model,
+      "Logit Fourier ARIMA" = "Logit Fourier",
+      "Elastic Net" = "Elastic Net",
+      "TSLM" = "TSLM"
+    ),
+    RMSE = round(RMSE, 2),
+    `RMSE reduction` = round(RMSE_reduction_vs_baseline, 2),
+    `Reduction (%)` = round(percent_RMSE_reduction_vs_baseline, 1)
+  ) %>%
+  pdf_table(
+    caption = "RMSE reduction relative to the best baseline model.",
+    font_size = 9
+  )
+```
+
+The best baseline is TSLM. Logit Fourier ARIMA reduces RMSE by about 6.2% in the full-horizon statistical setup. Elastic Net reduces RMSE by about 45.9% in the one-step-ahead operational setup.
+
+```{r improvement-plot, fig.cap="RMSE improvement over the best baseline model.", out.width="88%"}
+knitr::include_graphics(file.path(figures_dir, "30_final_improvement_over_baseline.png"))
+```
+
+The Elastic Net improvement is larger because the ML setup uses recent lagged information. It should be interpreted as an operational short-term forecasting result, not as an identical full-horizon comparison.
+
+# Residual diagnostics
+
+The residual analysis is one of the clearest parts of the project. The best ARIMA-family model improves accuracy, but its residuals still show strong autocorrelation. Elastic Net reduces this residual dependence substantially.
+
+```{r diagnostic-table}
+final_diagnostic_summary %>%
+  transmute(
+    Family = recode(
+      model_family,
+      "ARIMA-family" = "ARIMA",
+      "Regression/ML" = "ML"
+    ),
+    Model = recode(
+      model,
+      "Logit Fourier ARIMA" = "Logit Fourier",
+      "Elastic Net" = "Elastic Net"
+    ),
+    `Mean error` = round(mean_error, 3),
+    `SD error` = round(sd_error, 3),
+    `LB stat.` = round(ljung_box_statistic, 2),
+    `LB p-value` = round(ljung_box_p_value, 3)
+  ) %>%
+  pdf_table(
+    caption = "Residual diagnostic summary for the best ARIMA-family and ML models.",
+    font_size = 9
+  )
+```
+
+```{r residual-acf-comparison, fig.cap="Residual autocorrelation comparison.", out.width="88%"}
+knitr::include_graphics(file.path(figures_dir, "29_final_residual_acf_comparison.png"))
+```
+
+The Ljung-Box p-value for Logit Fourier ARIMA is effectively zero, indicating significant remaining autocorrelation. For Elastic Net, the p-value is 0.109, which is not significant at the 5% level. This supports the conclusion that lag-based features capture much of the short-term dependence left by the ARIMA-family model.
+
+# Discussion
+
+The results show a clear modelling progression.
+
+The baseline stage gives a useful reference point. TSLM performs best among the simple benchmarks, mainly because it includes calendar structure. The previous-year naive model also performs reasonably well, which confirms that annual seasonality matters.
+
+The ARIMA-family stage improves the full-horizon statistical forecast. The best model is Logit Fourier ARIMA, which captures seasonal patterns through Fourier terms and respects the bounded nature of the target.
+
+The regression and ML stage gives the strongest operational result. Elastic Net performs best in the one-step-ahead setup, and its residuals show much less autocorrelation than the ARIMA-family residuals. The variable-importance analysis suggests that recent renewable-share values, especially `lag_1`, are the dominant predictive signal.
+
+A practical interpretation is that statistical seasonal structure is useful for full-horizon forecasting, but operational day-ahead forecasting benefits strongly from recent observed values.
+
+# Limitations
+
+This project uses only historical generation-mix data. It does not include weather forecasts, electricity demand, electricity prices, holidays, or cross-border exchange variables. Those variables could improve the forecast, especially for renewable sources such as photovoltaic and wind generation.
+
+The ML models are evaluated in a one-step-ahead setup. This is useful for operational forecasting, but it is not the same task as forecasting the entire 2025 test year in one step.
+
+The target is renewable electricity share, not absolute renewable generation. This makes the project useful for analysing generation-mix dynamics, but it does not directly forecast total renewable energy output.
+
+The analysis is also specific to Italy and to the Terna data structure used in this project.
+
+# Conclusion
+
+The best full-horizon statistical model is Logit Fourier ARIMA. It improves on the best baseline by modelling seasonal structure and by respecting the bounded 0-100% nature of the target.
+
+The best operational one-step-ahead model is Elastic Net. It achieves the lowest test error and substantially reduces residual autocorrelation. Its performance is mainly explained by the strong predictive value of recent lagged renewable-share observations.
+
+Overall, the project shows that a staged forecasting workflow is useful: simple baselines provide a reference, ARIMA-family models improve full-horizon statistical forecasting, and lag-based regularized regression gives the strongest operational short-term performance.
+
+# References
+
+Terna. Actual Generation data, Transparency Report / Download Center.  
+https://developer.terna.it/docs/read/apis_catalog/generation/Actual_Generation
+
+Hyndman, R. J., & Athanasopoulos, G. *Forecasting: Principles and Practice*. OTexts.  
+Time series cross-validation: https://otexts.com/fpp3/tscv.html  
+Residual diagnostics: https://otexts.com/fpp3/diagnostics.html
+
+Zou, H., & Hastie, T. (2005). Regularization and variable selection via the Elastic Net. *Journal of the Royal Statistical Society: Series B*, 67(2), 301-320.  
+https://academic.oup.com/jrsssb/article/67/2/301/7109482
