@@ -1,0 +1,17 @@
+variable,importance,source
+lag_1,85.816896850293,Random Forest permutation importance
+weekday,20.610360232285622,Random Forest permutation importance
+rolling_7_mean,17.659114983120748,Random Forest permutation importance
+rolling_14_mean,8.879541684748903,Random Forest permutation importance
+rolling_30_mean,6.562608857271009,Random Forest permutation importance
+lag_7,4.71901417599213,Random Forest permutation importance
+lag_14,3.8257069171958653,Random Forest permutation importance
+trend,2.3569440609374115,Random Forest permutation importance
+lag_2,2.023213542001446,Random Forest permutation importance
+cos_day,1.9594035544590174,Random Forest permutation importance
+day_of_year,1.389393520610272,Random Forest permutation importance
+rolling_30_sd,1.3274650656624223,Random Forest permutation importance
+sin_day,0.8236893905339154,Random Forest permutation importance
+lag_30,0.7163744138585062,Random Forest permutation importance
+month,0.4696229781967116,Random Forest permutation importance
+rolling_7_sd,0.4586223365435622,Random Forest permutation importance
