@@ -1,0 +1,3 @@
+model_family,model,mean_error,sd_error,ljung_box_statistic,ljung_box_p_value
+ARIMA-family,Logit Fourier ARIMA,2.433525705164629,8.605630463152092,1057.465583584723,0
+Regression/ML,Elastic Net,-0.7374445075064242,5.105714524802738,20.73856255966428,0.10852223109709602

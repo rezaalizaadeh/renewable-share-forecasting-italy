@@ -1,0 +1,19 @@
+model_family,forecasting_setup,model,RMSE,MAE,MAPE,rank_within_family
+Regression/ML,One-step-ahead operational forecast,Elastic Net,5.151769128505535,4.072989130211519,10.103003277082028,1
+Regression/ML,One-step-ahead operational forecast,Lasso regression,5.15213242926464,4.072185094459743,10.098560091918454,2
+Regression/ML,One-step-ahead operational forecast,Lagged linear regression,5.195385231798947,4.129875729644943,10.25761397688791,3
+Regression/ML,One-step-ahead operational forecast,Ridge regression,5.234502554033466,4.197715992881751,10.541745606972349,4
+Regression/ML,One-step-ahead operational forecast,GAM,5.468256028527064,4.180979212005994,9.547711916191847,5
+Regression/ML,One-step-ahead operational forecast,Random Forest,5.527272782740243,4.409551048590481,10.795915753304646,6
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,8.931742689769568,7.299572630422774,17.474585103800827,1
+ARIMA-family,Full test-year forecast,Tuned Fourier ARIMA,9.003139576346152,7.393707744792614,17.89094867569522,2
+ARIMA-family,Full test-year forecast,Logit Trend Fourier ARIMA errors,9.2510323978065,7.543662640096325,21.01907174594703,3
+ARIMA-family,Full test-year forecast,Trend Fourier ARIMA errors,9.478522214888963,7.722166052977759,21.64553419640793,4
+Baseline,Full test-year benchmark,TSLM,9.51928610085588,7.831956087747192,22.295393623370146,1
+ARIMA-family,Full test-year forecast,Calendar ARIMA errors,9.648096638059547,7.965485970285643,21.634883358759968,5
+Baseline,Full test-year benchmark,Previous-year naive,11.693161844113847,9.24553257571369,23.580626680063933,2
+Baseline,Full test-year benchmark,Mean,13.8364752891645,11.283958986093708,25.88264769387009,3
+ARIMA-family,Full test-year forecast,Weekly SARIMA,13.952195348300974,11.391435196907535,25.889237395446187,6
+ARIMA-family,Full test-year forecast,ARIMA,15.476325974293047,12.525433743127367,26.789017657395306,7
+Baseline,Full test-year benchmark,Weekly seasonal naive,19.772778949264097,16.434316074744572,39.52936885340478,4
+Baseline,Full test-year benchmark,Naive,23.488707171552225,20.044732296323424,40.16444642529043,5

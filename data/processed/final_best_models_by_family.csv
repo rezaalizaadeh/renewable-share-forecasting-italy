@@ -1,0 +1,4 @@
+model_family,forecasting_setup,model,RMSE,MAE,MAPE,rank_within_family
+Baseline,Full test-year benchmark,TSLM,9.51928610085588,7.831956087747192,22.295393623370146,1
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,8.931742689769568,7.299572630422774,17.474585103800827,1
+Regression/ML,One-step-ahead operational forecast,Elastic Net,5.151769128505535,4.072989130211519,10.103003277082028,1

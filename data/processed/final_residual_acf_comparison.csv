@@ -1,0 +1,127 @@
+model_family,forecasting_setup,model,lag,acf,n,ci,significance
+Baseline,Full test-year benchmark,TSLM,1,0.7912842659438534,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,2,0.6355604477155952,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,3,0.5894454275374723,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,4,0.5269544739620091,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,5,0.44073656212112755,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,6,0.4041264205896141,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,7,0.4129338429877797,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,8,0.39419582943230563,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,9,0.3563244528508053,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,10,0.33911813481069536,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,11,0.3364908933199118,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,12,0.29294405814957153,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,13,0.27350430510434925,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,14,0.2906582163659626,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,15,0.2896542734582945,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,16,0.3006765975646443,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,17,0.30713886441245053,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,18,0.3330820824157506,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,19,0.32844733148369754,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,20,0.33416683575043005,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,21,0.35528859307044425,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,22,0.32637428461305057,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,23,0.29888700798615475,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,24,0.29195500649140466,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,25,0.26120275273887184,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,26,0.2423968522513717,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,27,0.23842958735239736,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,28,0.26128950229867953,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,29,0.2977250713358176,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,30,0.30243367915335095,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,31,0.265308406409834,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,32,0.2406915076709635,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,33,0.22809283459371021,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,34,0.2161770926400516,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,35,0.20304956423199372,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,36,0.1704305269843438,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,37,0.16690220945914122,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,38,0.15247839294632312,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,39,0.13232867045472502,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,40,0.10650938852050088,365,0.10259108882768189,Significant
+Baseline,Full test-year benchmark,TSLM,41,0.09645772257572478,365,0.10259108882768189,Not significant
+Baseline,Full test-year benchmark,TSLM,42,0.1212141497626739,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,1,0.7753162766103011,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,2,0.6330580898909308,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,3,0.5717373263819847,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,4,0.5116672506446522,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,5,0.434548486798242,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,6,0.3829912393636814,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,7,0.4113497711404083,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,8,0.3732897948778926,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,9,0.3583238396108765,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,10,0.33304734697941946,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,11,0.3326057963251928,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,12,0.29884380037962754,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,13,0.2679568029599892,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,14,0.30889556071456925,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,15,0.28862718296726214,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,16,0.31521409693050223,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,17,0.30867311824425936,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,18,0.3311017749388104,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,19,0.33082016356232213,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,20,0.32322408530160024,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,21,0.35809609690594146,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,22,0.30614179508735706,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,23,0.2914921368019076,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,24,0.27107348748552207,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,25,0.23829887658702045,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,26,0.2184123345536363,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,27,0.19711272530105972,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,28,0.2333503726762878,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,29,0.24614313543806174,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,30,0.259682134342611,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,31,0.2098154317806844,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,32,0.18706267717785402,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,33,0.17638632695059517,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,34,0.14976675687288793,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,35,0.1544109668272787,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,36,0.1015260893494695,365,0.10259108882768189,Not significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,37,0.10892859935084125,365,0.10259108882768189,Significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,38,0.08250482194109114,365,0.10259108882768189,Not significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,39,0.06561145795146481,365,0.10259108882768189,Not significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,40,0.042142985933502096,365,0.10259108882768189,Not significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,41,0.017818479409718174,365,0.10259108882768189,Not significant
+ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,42,0.06350109059661833,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,1,0.016557450037953877,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,2,-0.018173866993028802,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,3,0.12425508275834218,365,0.10259108882768189,Significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,4,0.09915275386590908,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,5,-0.05381684015867118,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,6,-0.08615617469888,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,7,0.026743583701418057,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,8,0.010281502517448415,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,9,-0.024212175632336807,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,10,-0.049782832839307574,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,11,0.07390786974623301,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,12,-0.05548059011323563,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,13,-0.08280010607674143,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,14,2.3673815793649275e-4,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,15,-0.06329771137293434,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,16,0.024392046040149544,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,17,-0.038760805708494314,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,18,0.07880667820782858,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,19,0.007896996917258719,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,20,0.020341142779347714,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,21,0.131853821586571,365,0.10259108882768189,Significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,22,0.032870520791066005,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,23,-0.007198901651529637,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,24,0.07011308321337059,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,25,-0.008006379662541535,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,26,-0.017788065857814575,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,27,-0.02728140753540265,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,28,-0.03166728477213944,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,29,0.07732383636355909,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,30,0.08704121149893852,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,31,-0.017179183518101163,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,32,0.011381009486270204,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,33,0.023270974096559777,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,34,0.0103019917173001,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,35,0.04159928056485266,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,36,-0.06980682910176804,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,37,0.010255334117714518,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,38,-0.02497822716334653,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,39,-0.0026696502691002247,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,40,-0.034320346472706584,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,41,-0.07888418988147218,365,0.10259108882768189,Not significant
+Regression/ML,One-step-ahead operational forecast,Elastic Net,42,0.017127142326284532,365,0.10259108882768189,Not significant
