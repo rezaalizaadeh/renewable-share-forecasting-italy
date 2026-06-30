@@ -16,4 +16,8 @@ Baseline,Full test-year benchmark,Mean,13.8364752891645,11.283958986093708,25.88
 ARIMA-family,Full test-year forecast,Weekly SARIMA,13.952195348300974,11.391435196907535,25.889237395446187,6
 ARIMA-family,Full test-year forecast,ARIMA,15.476325974293047,12.525433743127367,26.789017657395306,7
 Baseline,Full test-year benchmark,Weekly seasonal naive,19.772778949264097,16.434316074744572,39.52936885340478,4
+Exponential smoothing,Full test-year forecast,Weekly ETS,20.943177753293966,17.597706408907005,35.36571183545649,1
 Baseline,Full test-year benchmark,Naive,23.488707171552225,20.044732296323424,40.16444642529043,5
+Exponential smoothing,Full test-year forecast,Simple exponential smoothing,23.488792599391857,20.04482142422611,40.16463813166563,2
+Exponential smoothing,Full test-year forecast,Damped Holt trend,23.49539835125209,20.051669190076417,40.17931119834083,3
+Exponential smoothing,Full test-year forecast,Holt linear trend,24.73227896056295,21.37351406958368,43.07868094193661,4

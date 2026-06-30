@@ -1,4 +1,5 @@
 model_family,forecasting_setup,model,RMSE,baseline_RMSE,RMSE_reduction_vs_baseline,percent_RMSE_reduction_vs_baseline,comparison_note
 Baseline,Full test-year benchmark,TSLM,9.51928610085588,9.51928610085588,0,0,Reference benchmark
+Exponential smoothing,Full test-year forecast,Weekly ETS,20.943177753293966,9.51928610085588,-11.423891652438087,-120.00786121357321,Classical full-horizon smoothing benchmark
 ARIMA-family,Full test-year forecast,Logit Fourier ARIMA,8.931742689769568,9.51928610085588,0.5875434110863118,6.172137331112317,Full-horizon improvement over baseline
 Regression/ML,One-step-ahead operational forecast,Elastic Net,5.151769128505535,9.51928610085588,4.367516972350344,45.88071968923868,Operational one-step-ahead improvement over baseline

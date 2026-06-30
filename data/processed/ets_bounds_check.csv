@@ -1,0 +1,5 @@
+model,forecasts_below_0,forecasts_above_100,lower_95_below_0,upper_95_above_100
+Damped Holt trend,0,0,362,337
+Holt linear trend,0,0,362,337
+Simple exponential smoothing,0,0,362,337
+Weekly ETS,0,0,357,310

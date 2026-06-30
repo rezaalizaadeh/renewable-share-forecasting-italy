@@ -1,4 +1,5 @@
 comparison,setup_note,reference_model,challenger_model,reference_RMSE,challenger_RMSE,RMSE_reduction,percent_RMSE_reduction
+Best Exponential smoothing vs best baseline,Full-horizon classical forecasting comparison,TSLM,Weekly ETS,9.51928610085588,20.943177753293966,-11.423891652438087,-120.00786121357321
 Best ARIMA-family vs best baseline,Full-horizon statistical comparison,TSLM,Logit Fourier ARIMA,9.51928610085588,8.931742689769568,0.5875434110863118,6.172137331112317
 Best Regression/ML vs best baseline,Operational one-step-ahead comparison,TSLM,Elastic Net,9.51928610085588,5.151769128505535,4.367516972350344,45.88071968923868
 Best Regression/ML vs best ARIMA-family,Different information setting: one-step-ahead ML vs full-horizon ARIMA,Logit Fourier ARIMA,Elastic Net,8.931742689769568,5.151769128505535,3.7799735612640326,42.32067237666419
